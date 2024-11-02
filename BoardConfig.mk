@@ -11,13 +11,18 @@ DEVICE_PATH := device/samsung/a13ve
 ALLOW_MISSING_DEPENDENCIES := true
 
 # Architecture
-TARGET_ARCH := arm
-TARGET_ARCH_VARIANT := armv7-a-neon
-TARGET_CPU_ABI := armeabi-v7a
-TARGET_CPU_ABI2 := armeabi
+TARGET_ARCH := arm64
+TARGET_ARCH_VARIANT := armv8-a
+TARGET_CPU_ABI := arm64-v8a
+TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := cortex-a55
 
+TARGET_2ND_ARCH := arm
+TARGET_2ND_ARCH_VARIANT := armv7-a-neon
+TARGET_2ND_CPU_ABI := armeabi-v7a
+TARGET_2ND_CPU_ABI2 := armeabi
+TARGET_2ND_CPU_VARIANT := generic
+TARGET_BOARD_SUFFIX := _64
 TARGET_USES_64_BIT_BINDER := true
 
 # APEX
@@ -40,7 +45,7 @@ BOARD_KERNEL_TAGS_OFFSET := 0x0bc08000
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
-BOARD_KERNEL_IMAGE_NAME := Image
+BOARD_KERNEL_IMAGE_NAME := Image.gz
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_KERNEL_SEPARATED_DTBO := true
 TARGET_KERNEL_CONFIG := a13ve_defconfig
@@ -49,7 +54,7 @@ TARGET_KERNEL_SOURCE := kernel/samsung/a13ve
 # Kernel - prebuilt
 TARGET_FORCE_PREBUILT_KERNEL := true
 ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 BOARD_INCLUDE_DTB_IN_BOOTIMG := 
@@ -102,3 +107,25 @@ TW_EXTRA_LANGUAGES := true
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_USE_TOOLBOX := true
+
+# extra
+BOARD_RAMDISK_USE_LZMA := true
+LZMA_RAMDISK_TARGETS := recovery
+
+BOARD_HAS_NO_REAL_SDCARD := true
+
+TW_DEVICE_VERSION := Mohammed_saleh
+
+# remove TrueType fonts
+TW_DISABLE_TTF:= true
+# removes the reboot option to boot into bootloader, needed e.g. on samsung devices which use Download mode instead
+TW_NO_REBOOT_BOOTLOADER := true
+# add an option in reboot menu to reboot into Download Mode
+TW_HAS_DOWNLOAD_MODE := true
+# include f2fs support (make sure your kernel supports f2fs!)
+TARGET_USERIMAGES_USE_F2FS := true
+
+# A/B
+
+AB_OTA_UPDATER := true
+TW_INCLUDE_REPACKTOOLS := true
